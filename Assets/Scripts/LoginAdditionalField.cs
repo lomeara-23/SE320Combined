@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 // using System.Threading.Tasks;
+using UnityEngine.Networking;
+
 
 public class LoginAdditionalField : MonoBehaviour
 {
@@ -21,41 +23,40 @@ public class LoginAdditionalField : MonoBehaviour
 
   //if button clicked
   public void compareCredentials(){
-    string name = "123@chapman.edu";
-    string password = "12345";
-    LoginAsync(name, password);
+    Debug.Log("Clicked");
+    StartCoroutine(login());
+    Debug.Log("Login Attempted");
   }
 
+  // UnityWebRequest Version
 
-  // Call JS server
-  public async Task<bool> LoginAsync(string username, string password){
-      try
+
+  IEnumerator login()
+  {
+      string username = "123@chapman.edu";
+      string password = "12345";
+
+      WWWForm form = new WWWForm();
+      form.AddField("username", username);
+      form.AddField("password", password);
+      Debug.Log("Form Created");
+      using (UnityWebRequest www = UnityWebRequest.Post("http://localhost:3000/login", form))
       {
-          var requestData = new { username, password };
-          var jsonContent = JsonConvert.SerializeObject(requestData);
-          var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+        Debug.Log("Request Built");
+          yield return www.SendWebRequest();
+          Debug.Log("Sent");
 
-          var response = await _httpClient.PostAsync("http://localhost:3000/login", content);
-
-          if (response.IsSuccessStatusCode)
+          if (www.result == UnityWebRequest.Result.Success)
           {
-              // Login successful, navigate to a new webpage
-              // You can redirect the user or render a new view here
-              Console.WriteLine("Login successful");
-              return true;
+              Debug.Log("Success!");
           }
           else
           {
-              // Handle login error
-              Console.WriteLine("Login failed");
-              return false;
+              Debug.Log("Error: " + www.error);
           }
-      }
-      catch (Exception e)
-      {
-          Debug.Log($"Error: {e.Message}");
-          return false;
+          Debug.Log("Received?");
       }
   }
+
 
 }

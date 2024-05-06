@@ -47,35 +47,35 @@ public class Authentication : MonoBehaviour
    //  }
 
 
-    void Start() {
-      try
-      {
-        MailMessage mail = new MailMessage();
-        SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-        SmtpServer.Timeout = 10000;
-        SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-        SmtpServer.UseDefaultCredentials = false;
-        SmtpServer.Port = 587;
-        mail.From = new MailAddress("mego@chapman.edu");
-        mail.To.Add(new MailAddress("fomina@chapman.edu"));
-        mail.Subject = "Test Email through C Sharp App";
-        mail.Body = "This is a random body";
-        SmtpServer.Credentials = new System.Net.NetworkCredential("mego@chapman.edu", "") as ICredentialsByHost;
-        SmtpServer.EnableSsl = true;
-        ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
-          return true;
-          };
-        mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-        SmtpServer.Send(mail);
-      }
-      catch (Exception ex)
-      {
-          Debug.LogError("Failed to send verification email");
-      }
-
-
-
-    }
+    // void Start() {
+    //   try
+    //   {
+    //     MailMessage mail = new MailMessage();
+    //     SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+    //     SmtpServer.Timeout = 10000;
+    //     SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+    //     SmtpServer.UseDefaultCredentials = false;
+    //     SmtpServer.Port = 587;
+    //     mail.From = new MailAddress("mego@chapman.edu");
+    //     mail.To.Add(new MailAddress("fomina@chapman.edu"));
+    //     mail.Subject = "Test Email through C Sharp App";
+    //     mail.Body = "This is a random body";
+    //     SmtpServer.Credentials = new System.Net.NetworkCredential("mego@chapman.edu", "") as ICredentialsByHost;
+    //     SmtpServer.EnableSsl = true;
+    //     ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
+    //       return true;
+    //       };
+    //     mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+    //     SmtpServer.Send(mail);
+    //   }
+    //   catch (Exception ex)
+    //   {
+    //       Debug.LogError("Failed to send verification email");
+    //   }
+    //
+    //
+    //
+    // }
 
     // void Start() {
     //     MailMessage mail = new MailMessage();

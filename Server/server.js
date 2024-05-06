@@ -21,7 +21,6 @@ const users = client.db('users')
 // Login endpoint
 app.post('/login-teacher', async (req, res) => {
   const { username, password } = req.body;
-  
   const teachers = users.collection('Teachers'); 
 
   const user = await teachers.findOne({
@@ -43,7 +42,7 @@ app.post('/login-student', async (req, res) => {
   
   const students = users.collection('Students'); 
 
-  const user = await users.findOne({
+  const user = await students.findOne({
     'username': username,
     'teacherCode': code
   })

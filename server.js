@@ -24,9 +24,28 @@ app.post('/login-teacher', async (req, res) => {
   
   const teachers = users.collection('Teachers'); 
 
-  const user = await users.findOne({
+  const user = await teachers.findOne({
     'username': username,
     'password': password
+  })
+  
+  if (user) {
+    // If user is found, return a success message or token
+    res.status(200).json({ message: 'Login successful' });
+  } else {
+    // If user is not found, return an error message
+    res.status(401).json({ error: 'Invalid username or password' });
+  }
+});
+
+app.post('/login-student', async (req, res) => {
+  const { username, code } = req.body;
+  
+  const students = users.collection('Students'); 
+
+  const user = await users.findOne({
+    'username': username,
+    'teacherCode': code
   })
   
   if (user) {

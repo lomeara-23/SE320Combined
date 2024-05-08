@@ -62,6 +62,38 @@ app.post('/login-student', async (req, res) => {
   }
 });
 
+// Create teacher endpoint
+app.post('/create-teacher', async (req, res) => {
+  const { id, name, username } = req.body;
+
+  const me = await teachers.findOne({
+    '_id': ObjectId.createFromHexString(id)
+  })
+  
+  if (me) {
+    const newStudent = {
+      name: name,
+      username: username,
+      teacherCode: me.code,
+      gamesPlayed: 0
+    }
+    try {
+      newStudentDoc = students.insertOne(newStudent)
+    } catch (error) {
+      res.status(401).json({ error: 'Account creation failed' });
+      return
+    }
+    
+    res.status(200).json({
+      message: 'Acocunt creation successful',
+      studentUsername: newStudentDoc.username,
+    });
+  } else {
+    // If user is not found, return an error message
+    res.status(401).json({ error: 'Teacher does not exist' });
+  }
+});
+
 // Create student endpoint
 app.post('/create-student', async (req, res) => {
   const { id, name, username } = req.body;

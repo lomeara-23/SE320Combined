@@ -66,7 +66,7 @@ app.post('/login-student', async (req, res) => {
   
   if (user) {
     // If user is found, return a success message or token
-    res.status(200).json({ message: 'Login successful' });
+    res.status(200).json({ StudentId: user._id });
   } else {
     // If user is not found, return an error message
     res.status(401).json({ error: 'Invalid username or password' });
@@ -101,8 +101,6 @@ app.post('/create-teacher', async (req, res) => {
       codeValid = true;
     }
   }
-
-  
 
   const newTeacher = {
     name: name,
@@ -205,7 +203,7 @@ app.post('/send-auth-code', async (req, res) => {
     var mailOptions = {
       from: authEmail,
       to: user.email,
-      subject: 'SkillGame 2FA',
+      subject: 'BrainyBay 2FA',
       text: "Authentication code: "+authCode
     };
     
@@ -223,7 +221,29 @@ app.post('/send-auth-code', async (req, res) => {
   }
 });
 
+// Send auth code
+app.post('/increment-student-score', async (req, res) => {
+  const { id } = req.body;
 
+  const user = await students.updateOne({
+    '_id': ObjectId.createFromHexString(id)
+  },{
+    $inc: {
+      gamesPlayed: 1
+    }
+  })
+  console.log(user)
+  if (user) {    
+    // Increment gamesPlayed by one
+    
+    res.status(200).json({
+      message: "Score incremented by 1"
+    });
+  } else {
+    // If user is not found, return an error message
+    res.status(401).json({ error: 'Invalid account ID' });
+  }
+});
 
 
 // Start the server

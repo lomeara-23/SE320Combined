@@ -112,7 +112,13 @@ app.post('/create-teacher', async (req, res) => {
 
   try {
     await teachers.insertOne(newTeacher)
-    res.status(200).json({ teacherEmail: newTeacher.email });
+    const newTeacherDoc = await teachers.findOne({
+      'email': email
+    })
+    
+    res.status(200).json({
+      userID: newTeacherDoc._id
+    });
   } catch (e) {
     res.status(401).json({ error: e });
   }
@@ -134,12 +140,21 @@ app.post('/create-student', async (req, res) => {
       gamesPlayed: 0
     }
     try {
-      newStudentDoc = students.insertOne(newStudent)
+      students.insertOne(newStudent)
     } catch (error) {
       res.status(401).json({ error: 'Account creation failed' });
       return
     }
-    
+
+    const newStudentDoc = await students.findOne({'username': username});
+
+    console.log(newStudentDoc)
+
+    await teachers.updateOne({
+      '_id': ObjectId.createFromHexString(id)
+    },{
+      $push: {'studentIds': String(newStudentDoc._id)}
+    });
     res.status(200).json({
       studentUsername: newStudentDoc.username,
     });
